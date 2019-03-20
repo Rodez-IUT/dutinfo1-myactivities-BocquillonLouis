@@ -2,8 +2,8 @@ CREATE OR REPLACE FUNCTION find_all_activities_for_owner(ownername varchar(500))
    
 	SELECT a.*
 	FROM activity a
-	WHERE a.owner_id = (SELECT id
-			    		FROM "user"
-			    	    WHERE username = ownername);
+	JOIN "user" owner
+	ON a.owner_id = owner.id
+	WHERE owner.username = ownername;
    
 $$ LANGUAGE SQL;
