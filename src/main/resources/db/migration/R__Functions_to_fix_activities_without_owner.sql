@@ -19,15 +19,16 @@ CREATE OR REPLACE FUNCTION fix_activities_without_owner() RETURNS SETOF activity
 DECLARE
 	
 	defaultOwner "user"%rowtype;
+	nowDate date = now();
 
 BEGIN
 	
 	defaultOwner := get_default_owner();
 	RETURN query
-	UPDATE activity
-	SET owner_id = defaultOwner.id
-	WHERE owner_id IS NULL 
-	returning *;
-	
+		UPDATE activity
+		SET owner_id = defaultOwner.id,
+			modification_date = nowDate
+		WHERE owner_id IS NULL 
+		returning *;
 END
 $$ LANGUAGE plpgsql;
